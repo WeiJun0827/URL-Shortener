@@ -1,0 +1,27 @@
+version: '3'
+services: 
+  app:
+    container_name: shorten-url
+    restart: always
+    build: .
+    ports: 
+      - '9000:3000'
+    links:
+      - db
+      - cache
+  db:
+    user: $UID
+    container_name: mongo
+    image: mongo
+    ports: 
+      - '27017:27017'
+    environment: 
+      MONGO_INITDB_DATABASE: shortenUrl
+    volumes: 
+      - ./data:/data/db
+  cache:
+    image: redis:alpine
+    volumes: 
+      - ./data:/data/cache
+    ports:
+      - '6379:6379'
